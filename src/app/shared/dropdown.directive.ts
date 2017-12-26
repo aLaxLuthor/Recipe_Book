@@ -1,15 +1,16 @@
-import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, 
+  Input,
+  TemplateRef, 
+  HostBinding,
+  HostListener } from '@angular/core';
 
 @Directive({
   selector: '[appDropdown]'
 })
 export class DropdownDirective {
-  @Input() onClick(){
-    
-  }
+  @HostBinding('class.open') isOpen = false;
 
-
-  constructor(private templateRef: TemplateRef<any>, private vcRef: ViewContainerRef) { 
-
+  @HostListener('click') toggleOpen(){
+    this.isOpen = !this.isOpen;      
   }
 }

@@ -1,4 +1,5 @@
 import { Component, Output } from '@angular/core';
+import { ShoppingListService } from './shopping-list/shopping-list.service';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,5 @@ export class AppComponent {
     this.loadedTab = tabName;
   }
 
+  constructor(private shoppingListService: ShoppingListService){}
 }

@@ -1,4 +1,4 @@
-export class ingredient{
+export class Ingredient{
     //This will automatically create 2 public properties 
     //based on the arguments passed in
     constructor(public name: string, public amount: number){}

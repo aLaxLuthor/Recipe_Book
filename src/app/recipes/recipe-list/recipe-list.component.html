@@ -11,8 +11,7 @@ New Recipe
         <div class="row">
             <app-recipe-item 
                 *ngFor="let recipeEl of recipes" 
-                [currRecipe]="recipeEl"
-                (recipeSelected)="onRecipeSelected(recipeEl)">
+                [currRecipe]="recipeEl">
             </app-recipe-item>
         </div>        
     </div>
