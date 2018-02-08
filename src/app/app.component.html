@@ -4,14 +4,15 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            
-            <app-recipes *ngIf="loadedTab == 'recipe'">
+            <router-outlet></router-outlet>
+            <!-- <app-recipes *ngIf="loadedTab == 'recipe'"> -->
+            <!-- <app-recipes (onclick)="onRecipesClick()">
 
             </app-recipes>
 
             <app-shopping-list  *ngIf="loadedTab != 'recipe'">
 
-            </app-shopping-list>
+            </app-shopping-list> -->
 
         </div>
     </div>
