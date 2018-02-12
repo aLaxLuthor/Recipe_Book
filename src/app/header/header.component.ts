@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 
@@ -7,12 +7,5 @@ import { Router, ActivatedRoute } from '@angular/router';
     templateUrl: './header.component.html'
 })
 export class HeaderComponent {
-    @Output() featureSelected = new EventEmitter<string>();
-
     constructor(private route: ActivatedRoute, private router: Router){}
-
-    onSelect(tabName: string){
-        // this.featureSelected.emit(tabName);
-    }
-
 }
