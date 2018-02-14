@@ -4,13 +4,10 @@ import { ingredient } from '../shared/ingredient.model'
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 
 @Injectable()
-export class RecipeService{
-    recipeSelected = new EventEmitter<Recipe>();
+export class RecipeService{    
     addSelectedRecipeIngredientsToShoppingList = new EventEmitter<Recipe>();
 
-    constructor(public slService: ShoppingListService){
-
-    }
+    constructor(public slService: ShoppingListService){}
 
     private recipes: Recipe[] = [
         new Recipe(
