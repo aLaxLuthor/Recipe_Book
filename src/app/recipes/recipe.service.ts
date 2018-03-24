@@ -3,13 +3,14 @@ import {Recipe} from './recipe.model';
 import { ingredient } from '../shared/ingredient.model'
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Subject } from 'rxjs/Subject';
+import { Http, Response } from '@angular/http';
+import 'rxjs/Rx';
 
 @Injectable()
 export class RecipeService{    
     addSelectedRecipeIngredientsToShoppingList = new EventEmitter<Recipe>();
     recipesChanged = new Subject<Recipe[]>();
-    constructor(public slService: ShoppingListService){}
-
+    databaseStr: string = "https://ng-recipe-book-43a8a.firebaseio.com/recipes.json";
     private recipes: Recipe[] = [
         new Recipe(
             'Apple Pie', 
@@ -31,31 +32,57 @@ export class RecipeService{
             ])
       ];
 
-      getRecipes(){
-          //slice with no arguments returns a copy of the array
-          return this.recipes.slice();
-      }
+    constructor(public slService: ShoppingListService, private http: Http){}    
 
-      getRecipe(id: number){
-          return this.recipes[id];
-      }
+    getRecipes(){
+        //slice with no arguments returns a copy of the array
+        return this.recipes.slice();
+    }
 
-      removeRecipe(id: number){
-          this.recipes.splice(id, 1);
-          this.recipesChanged.next(this.recipes.slice());
-      }
+    getRecipe(id: number){
+        return this.recipes[id];
+    }
 
-      addIngregientsToShoppingList(ingredients: ingredient[]){
-          this.slService.addIngredients(ingredients);
-      }
-
-      addRecipe(newRecipe: Recipe){
-          this.recipes.push(newRecipe);
-          this.recipesChanged.next(this.recipes.slice());
-      }
-
-      updateRecipe(index: number, newRecipe: Recipe){
-        this.recipes[index] = newRecipe;
+    removeRecipe(id: number){
+        this.recipes.splice(id, 1);
         this.recipesChanged.next(this.recipes.slice());
-      }
+    }
+
+    addIngregientsToShoppingList(ingredients: ingredient[]){
+        this.slService.addIngredients(ingredients);
+    }
+
+    addRecipe(newRecipe: Recipe){
+        this.recipes.push(newRecipe);
+        this.recipesChanged.next(this.recipes.slice());
+    }
+
+    updateRecipe(index: number, newRecipe: Recipe){
+    this.recipes[index] = newRecipe;
+    this.recipesChanged.next(this.recipes.slice());
+    }
+
+    //Database Transaction Methods
+    saveRecipesToDatabase(){
+    return this.http.put(this.databaseStr, this.recipes);
+    }
+
+    loadRecipesFromDatabase(){
+        return this.http.get(this.databaseStr).map(
+            (response: Response) => {
+                const recipes: Recipe[] = response.json();
+                for(let currRecipe of recipes){
+                    if(!currRecipe['ingredients']){
+                        currRecipe['ingredients'] = [];
+                    }
+                }
+                return recipes;                
+            }
+        ).subscribe(
+            (recipes: Recipe[]) => {
+                this.recipes = recipes;
+                this.recipesChanged.next(this.recipes.slice());
+            }
+        );
+    }
 }
