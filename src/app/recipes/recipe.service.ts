@@ -5,12 +5,14 @@ import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Subject } from 'rxjs/Subject';
 import { Http, Response } from '@angular/http';
 import 'rxjs/Rx';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class RecipeService{    
     addSelectedRecipeIngredientsToShoppingList = new EventEmitter<Recipe>();
     recipesChanged = new Subject<Recipe[]>();
-    databaseStr: string = "https://ng-recipe-book-43a8a.firebaseio.com/recipes.json";
+    databaseStr: string = "https://ng-recipe-book-43a8a.firebaseio.com/recipes.json?auth=";
+
     private recipes: Recipe[] = [
         new Recipe(
             'Apple Pie', 
@@ -32,7 +34,9 @@ export class RecipeService{
             ])
       ];
 
-    constructor(public slService: ShoppingListService, private http: Http){}    
+    constructor(public slService: ShoppingListService, 
+        private http: Http,
+        private authService: AuthService){}    
 
     getRecipes(){
         //slice with no arguments returns a copy of the array
@@ -64,11 +68,14 @@ export class RecipeService{
 
     //Database Transaction Methods
     saveRecipesToDatabase(){
-    return this.http.put(this.databaseStr, this.recipes);
+        const token = this.authService.getToken();
+        return this.http.put(this.databaseStr + token, this.recipes);
     }
 
     loadRecipesFromDatabase(){
-        return this.http.get(this.databaseStr).map(
+        const token = this.authService.getToken();
+
+        return this.http.get(this.databaseStr + token).map(
             (response: Response) => {
                 const recipes: Recipe[] = response.json();
                 for(let currRecipe of recipes){
@@ -76,7 +83,7 @@ export class RecipeService{
                         currRecipe['ingredients'] = [];
                     }
                 }
-                return recipes;                
+                return recipes;
             }
         ).subscribe(
             (recipes: Recipe[]) => {

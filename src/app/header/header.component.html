@@ -13,7 +13,17 @@
                 <li routerLinkActive="active"><a routerLink="/shopping-list" href="#">Shopping List</a></li>                
             </ul>
             <ul class="nav navbar-nav navbar-right">                    
-                <li class="dropdown" appDropdown>
+                <ng-template [ngIf]="!authService.isAuthenticated()">
+                    <li><a routerLink="/signup">Register New User</a></li>
+                    <li><a routerLink="/signin">Sign In </a></li>
+                </ng-template>
+                <li><a style="cursor: pointer"
+                    (click)="onLogout()"
+                    *ngIf="authService.isAuthenticated()">
+                    Logout
+                </a>
+                </li>
+                <li class="dropdown" appDropdown *ngIf="authService.isAuthenticated()">                    
                     <a 
                     class="dropdown-toggle" 
                     role="button">
