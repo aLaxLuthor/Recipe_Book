@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
 import { RecipesComponent } from '../recipes/recipes.component';
 import { RecipeListComponent } from "../recipes/recipe-list/recipe-list.component";
 import { RecipeDetailComponent } from '../recipes/recipe-detail/recipe-detail.component';
@@ -20,6 +21,7 @@ const recipeRoutes: Routes = [
     imports: [
         RouterModule.forChild(recipeRoutes)
     ],
-    exports: [RouterModule]
+    exports: [RouterModule],
+    providers: [AuthGuard]
 })
 export class RecipesRoutingModule{}

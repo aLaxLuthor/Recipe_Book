@@ -6,12 +6,17 @@ import { Subject } from 'rxjs/Subject';
 import { Http, Response } from '@angular/http';
 import 'rxjs/Rx';
 import { AuthService } from '../auth/auth.service';
+import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 
 @Injectable()
 export class RecipeService{    
     addSelectedRecipeIngredientsToShoppingList = new EventEmitter<Recipe>();
     recipesChanged = new Subject<Recipe[]>();
-    databaseStr: string = "https://ng-recipe-book-43a8a.firebaseio.com/recipes.json?auth=";
+    databaseStr: string = "https://ng-recipe-book-43a8a.firebaseio.com/recipes.json";
+
+    constructor(public slService: ShoppingListService, 
+        private httpClient: HttpClient,
+        private authService: AuthService){}
 
     private recipes: Recipe[] = [
         new Recipe(
@@ -32,11 +37,7 @@ export class RecipeService{
                 new ingredient('Chicken', 1),
                 new ingredient('sauce', 1)
             ])
-      ];
-
-    constructor(public slService: ShoppingListService, 
-        private http: Http,
-        private authService: AuthService){}    
+      ];    
 
     getRecipes(){
         //slice with no arguments returns a copy of the array
@@ -68,16 +69,26 @@ export class RecipeService{
 
     //Database Transaction Methods
     saveRecipesToDatabase(){
-        const token = this.authService.getToken();
-        return this.http.put(this.databaseStr + token, this.recipes);
+        const token  = this.authService.getToken();
+        // return this.httpClient.put(this.databaseStr, this.recipes, {            
+        //     params: new HttpParams().set('auth', token.toString())
+        // });
+        const req = new HttpRequest('PUT', this.databaseStr, this.recipes, {
+            reportProgress: true,
+            // params: new HttpParams().set('auth', token.toString())
+        });
+        return this.httpClient.request(req);
     }
 
     loadRecipesFromDatabase(){
         const token = this.authService.getToken();
 
-        return this.http.get(this.databaseStr + token).map(
-            (response: Response) => {
-                const recipes: Recipe[] = response.json();
+        //return this.httpClient.get<Recipe[]>(this.databaseStr + token).map(
+        return this.httpClient.get<Recipe[]>(this.databaseStr, {
+            observe: 'body',
+            // params: new HttpParams().set('auth', token.toString())
+        }).map(
+            (recipes) => {
                 for(let currRecipe of recipes){
                     if(!currRecipe['ingredients']){
                         currRecipe['ingredients'] = [];
@@ -90,6 +101,6 @@ export class RecipeService{
                 this.recipes = recipes;
                 this.recipesChanged.next(this.recipes.slice());
             }
-        );
+        );     
     }
 }

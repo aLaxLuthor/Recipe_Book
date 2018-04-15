@@ -34,7 +34,7 @@ export class AuthService {
     firebase.auth().currentUser.getToken().then(
       (token: string) => this.token = token
     )
-    return this.token;
+    return this.token.toString();
   }
 
   isAuthenticated(){

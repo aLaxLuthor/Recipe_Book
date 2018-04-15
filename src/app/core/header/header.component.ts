@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RecipeService } from '../recipes/recipe.service';
-import { AuthService } from '../auth/auth.service';
+import { RecipeService } from '../../recipes/recipe.service';
+import { AuthService } from '../../auth/auth.service';
 
 
 @Component({
@@ -26,5 +26,9 @@ export class HeaderComponent {
 
     onLogout(){
         this.authService.logout();
+    }
+
+    isAuthenticated() {
+        return this.authService.isAuthenticated();
     }
 }
