@@ -1,7 +1,6 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import {Recipe} from './recipe.model';
 import { ingredient } from '../shared/ingredient.model'
-import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Subject } from 'rxjs/Subject';
 import { Http, Response } from '@angular/http';
 import 'rxjs/Rx';
@@ -14,8 +13,7 @@ export class RecipeService{
     recipesChanged = new Subject<Recipe[]>();
     databaseStr: string = "https://ng-recipe-book-43a8a.firebaseio.com/recipes.json";
 
-    constructor(public slService: ShoppingListService, 
-        private httpClient: HttpClient,
+    constructor(private httpClient: HttpClient,
         private authService: AuthService){}
 
     private recipes: Recipe[] = [
@@ -53,9 +51,10 @@ export class RecipeService{
         this.recipesChanged.next(this.recipes.slice());
     }
 
-    addIngregientsToShoppingList(ingredients: ingredient[]){
-        this.slService.addIngredients(ingredients);
-    }
+    // addIngregientsToShoppingList(ingredients: ingredient[]){
+    //     this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
+    //     //this.slService.addIngredients(ingredients);
+    // }
 
     addRecipe(newRecipe: Recipe){
         this.recipes.push(newRecipe);
@@ -63,8 +62,8 @@ export class RecipeService{
     }
 
     updateRecipe(index: number, newRecipe: Recipe){
-    this.recipes[index] = newRecipe;
-    this.recipesChanged.next(this.recipes.slice());
+        this.recipes[index] = newRecipe;
+        this.recipesChanged.next(this.recipes.slice());
     }
 
     //Database Transaction Methods

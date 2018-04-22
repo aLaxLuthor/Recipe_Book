@@ -1,5 +1,4 @@
 import { Component, Output, OnInit } from '@angular/core';
-import { ShoppingListService } from './shopping-list/shopping-list.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as firebase from 'firebase';
 
@@ -14,8 +13,7 @@ export class AppComponent implements OnInit {
   //   this.loadedTab = tabName;
   // }
 
-  constructor(private shoppingListService: ShoppingListService,
-    private route: ActivatedRoute, 
+  constructor(private route: ActivatedRoute, 
     private router: Router){}
 
   ngOnInit(){
