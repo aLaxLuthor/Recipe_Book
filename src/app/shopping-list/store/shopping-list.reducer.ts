@@ -1,10 +1,6 @@
 import * as ShoppingListActions from './shopping-list.actions';
 import { Action } from "@ngrx/store";
-import { ingredient } from '../../shared/ingredient.model'
-
-export interface appState{
-    shoppingList: State
-}
+import { ingredient } from '../../shared/ingredient.model';
 
 export interface State{
     ingredients: ingredient[],
@@ -12,7 +8,7 @@ export interface State{
     editedIngredientIndex: number
 }
 
-const initialState: State= {
+const initialState: State = {
     ingredients: [
         new ingredient('Apples', 5),
         new ingredient('Tomatoes', 10)       

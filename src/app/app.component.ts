@@ -8,10 +8,6 @@ import * as firebase from 'firebase';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  // loadedTab = 'recipe';
-  // onNavigate(tabName: string){
-  //   this.loadedTab = tabName;
-  // }
 
   constructor(private route: ActivatedRoute, 
     private router: Router){}

@@ -68,24 +68,15 @@ export class RecipeService{
 
     //Database Transaction Methods
     saveRecipesToDatabase(){
-        const token  = this.authService.getToken();
-        // return this.httpClient.put(this.databaseStr, this.recipes, {            
-        //     params: new HttpParams().set('auth', token.toString())
-        // });
         const req = new HttpRequest('PUT', this.databaseStr, this.recipes, {
             reportProgress: true,
-            // params: new HttpParams().set('auth', token.toString())
         });
         return this.httpClient.request(req);
     }
 
     loadRecipesFromDatabase(){
-        const token = this.authService.getToken();
-
-        //return this.httpClient.get<Recipe[]>(this.databaseStr + token).map(
         return this.httpClient.get<Recipe[]>(this.databaseStr, {
             observe: 'body',
-            // params: new HttpParams().set('auth', token.toString())
         }).map(
             (recipes) => {
                 for(let currRecipe of recipes){
