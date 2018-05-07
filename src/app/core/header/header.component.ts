@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 
-import { RecipeService } from '../../recipes/recipe.service';
 import { AuthService } from '../../auth/auth.service';
 import * as fromApp from '../../store/app.reducers';
 import * as fromAuth from '../../auth/store/auth.reducer';
+import * as AuthActions from '../../auth/store/auth.actions';
+import * as fromRecipeActions from '../../recipes/store/recipe.actions';
 
 @Component({
     selector: 'app-header',
@@ -14,9 +15,7 @@ import * as fromAuth from '../../auth/store/auth.reducer';
 export class HeaderComponent implements OnInit{
     authState: Observable<fromAuth.State>;
 
-    constructor(private recipeService: RecipeService,
-        private authService: AuthService,
-        private store: Store<fromApp.AppState>){}    
+    constructor(private store: Store<fromApp.AppState>){}    
 
 
     ngOnInit(){
@@ -24,21 +23,14 @@ export class HeaderComponent implements OnInit{
     }
 
     onSaveData(){
-        this.recipeService.saveRecipesToDatabase().subscribe(
-            (response) => console.log(response),
-            (error) => console.log(error)
-          );       
+        this.store.dispatch(new fromRecipeActions.StoreRecipes());
     }
 
     onLoadData(){
-        this.recipeService.loadRecipesFromDatabase();
+        this.store.dispatch(new fromRecipeActions.FetchRecipes());
     }
 
     onLogout(){
-        this.authService.logout();
+        this.store.dispatch(new AuthActions.SignOut());
     }
-
-    // isAuthenticated() {                
-    //  return this.authService.isAuthenticated();
-    // }
 }

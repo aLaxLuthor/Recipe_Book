@@ -8,8 +8,11 @@ export class AuthGuard implements CanActivate{
     constructor(private store: Store<fromApp.AppState>){}
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
-        return this.store.select('auth').map((authState: fromAuth.State) => {
+        return this.store.select('auth')
+            .take(1)    //if using rxjs6 and not using rxjs-compat, this should be: pipe(take(1))
+                        //import take from 'rxjs/add/operator/take'
+            .map((authState: fromAuth.State) => {
             return authState.authenticated;
-        });
+            });
     }
 }

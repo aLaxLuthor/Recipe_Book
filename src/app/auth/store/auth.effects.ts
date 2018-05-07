@@ -1,6 +1,7 @@
 import { Effect, Actions } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/mergeMap';
 import { fromPromise } from 'rxjs/observable/fromPromise';
@@ -34,7 +35,7 @@ export class AuthEffects{
                 payload: token
             }]}
         );
-
+        //if not using rxjs-compat, this will need to be pipe(map(), switchMap())
     @Effect()
     authSignin = this.actions$
         .ofType(fromAuthActions.TRY_SIGN_IN)
@@ -57,4 +58,12 @@ export class AuthEffects{
                 payload: token
             }]}
         );
+
+    @Effect({dispatch: false})
+    authSignOut = this.actions$
+        .ofType(fromAuthActions.SIGN_OUT)
+        .do(() => {
+            this.router.navigate(['/']);
+        });
+        
 }
